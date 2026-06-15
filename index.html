@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickStart Installation — Intent Framework</title>
+<style>
+  :root{
+    --ink:#0a0a0f;
+    --ink-soft:#1a1a24;
+    --paper:#f7f5f2;
+    --paper-dim:#e9e6e0;
+    --red:#e3002b;          /* Virgin Media red */
+    --red-deep:#b00020;
+    --line:rgba(255,255,255,0.10);
+    --line-dark:rgba(10,10,15,0.12);
+    --muted:#8a8a99;
+    --muted-dark:#6b6b78;
+    --ok:#1f8a5b;
+    --amber:#c47f17;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    background:var(--ink);
+    color:var(--paper);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+  /* ---- nav ---- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(10,10,15,0.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-0.01em;font-size:15px}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--red);box-shadow:0 0 14px rgba(227,0,43,0.7)}
+  .navlinks{display:flex;gap:26px}
+  .navlinks a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:0.02em;transition:color .2s}
+  .navlinks a:hover{color:var(--paper)}
+  @media(max-width:720px){.navlinks{display:none}}
+
+  /* ---- hero ---- */
+  header{position:relative;padding:92px 0 70px;border-bottom:1px solid var(--line);overflow:hidden}
+  header::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(680px 360px at 78% 12%,rgba(227,0,43,0.16),transparent 70%);
+    pointer-events:none}
+  .eyebrow{font-size:12px;letter-spacing:0.22em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:22px}
+  h1{font-size:clamp(38px,6.4vw,76px);line-height:0.98;letter-spacing:-0.03em;font-weight:800;max-width:14ch}
+  h1 .thin{font-weight:300;color:var(--muted)}
+  .lede{margin-top:26px;font-size:clamp(16px,2vw,20px);color:#cfcdd6;max-width:54ch;font-weight:300}
+  .hero-cta{margin-top:34px;display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;text-decoration:none;
+    padding:14px 26px;border-radius:40px;font-weight:600;font-size:14px;letter-spacing:0.01em;transition:transform .18s,box-shadow .18s}
+  .hero-cta:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(227,0,43,0.35)}
+
+  /* ---- stat band ---- */
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--line);background:var(--ink-soft)}
+  .stat{padding:34px 22px;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:none}
+  .stat .n{font-size:clamp(30px,4vw,46px);font-weight:800;letter-spacing:-0.02em;line-height:1}
+  .stat .n .unit{color:var(--red);font-size:0.5em;vertical-align:super;margin-left:2px}
+  .stat .l{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.45}
+  @media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:none}.stat{border-bottom:1px solid var(--line)}}
+  @media(max-width:460px){.stats{grid-template-columns:1fr}.stat{border-right:none}}
+
+  /* ---- section scaffold ---- */
+  section{padding:84px 0;border-bottom:1px solid var(--line)}
+  .sec-label{font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:18px}
+  h2{font-size:clamp(28px,4.2vw,46px);line-height:1.04;letter-spacing:-0.025em;font-weight:800;max-width:20ch}
+  h2 .thin{font-weight:300;color:var(--muted)}
+  .sec-body{margin-top:22px;max-width:60ch;color:#c7c5cf;font-weight:300;font-size:16.5px}
+  .sec-body strong{color:var(--paper);font-weight:600}
+
+  /* ---- shift split ---- */
+  .shift-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
+  @media(max-width:820px){.shift-grid{grid-template-columns:1fr;gap:30px}}
+  .pillars{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+  .pillar{border:1px solid var(--line);border-radius:14px;padding:20px 22px;background:rgba(255,255,255,0.02)}
+  .pillar h4{font-size:15px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+  .pillar h4 .tag{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);background:var(--red);padding:3px 8px;border-radius:20px;font-weight:700}
+  .pillar p{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+  /* ---- intent cards ---- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:46px}
+  @media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.cards{grid-template-columns:1fr}}
+  .card{position:relative;border:1px solid var(--line);border-radius:16px;padding:24px 22px 22px;background:linear-gradient(180deg,rgba(255,255,255,0.035),rgba(255,255,255,0.01));
+    min-height:208px;overflow:hidden;transition:border-color .25s,transform .25s}
+  .card:hover{border-color:rgba(227,0,43,0.55);transform:translateY(-3px)}
+  .card .idx{font-size:11px;letter-spacing:0.14em;color:var(--muted);font-weight:600}
+  .card .idx b{color:var(--red)}
+  .card h3{margin-top:16px;font-size:18px;line-height:1.25;letter-spacing:-0.01em;font-weight:700;max-width:18ch}
+  .chip{display:inline-block;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:0.04em;padding:4px 11px;border-radius:20px}
+  .chip.low{background:rgba(31,138,91,0.16);color:#52c98c;border:1px solid rgba(31,138,91,0.4)}
+  .chip.med{background:rgba(196,127,23,0.16);color:#e0a341;border:1px solid rgba(196,127,23,0.4)}
+  .card .reveal{position:absolute;inset:0;background:var(--ink-soft);border:1px solid rgba(227,0,43,0.4);border-radius:16px;
+    padding:22px;display:flex;flex-direction:column;justify-content:center;opacity:0;transform:translateY(8px);
+    transition:opacity .25s,transform .25s;pointer-events:none}
+  .card:hover .reveal{opacity:1;transform:translateY(0)}
+  .reveal .rl{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--red);font-weight:700;margin-bottom:10px}
+  .reveal p{font-size:13px;color:#cdcbd5;line-height:1.5}
+  .reveal .src{margin-top:12px;font-size:11.5px;color:var(--muted);word-break:break-word}
+  .hovedhint{margin-top:14px;font-size:11px;color:var(--muted);letter-spacing:0.02em}
+
+  /* ---- flow ---- */
+  .flow{display:flex;flex-direction:column;gap:2px;margin-top:42px;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .flow-entry{background:var(--red);color:#fff;padding:20px 24px;font-weight:700;font-size:15px;letter-spacing:0.01em;display:flex;align-items:center;gap:12px}
+  .flow-entry .pin{font-size:11px;background:rgba(255,255,255,0.22);padding:4px 10px;border-radius:20px;letter-spacing:0.08em;text-transform:uppercase}
+  .flow-split{background:var(--ink-soft);padding:8px}
+  .flow-row{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:9px;transition:background .2s}
+  .flow-row:hover{background:rgba(255,255,255,0.04)}
+  .flow-row .name{font-weight:600;font-size:14px;min-width:148px}
+  .flow-row .path{font-size:12.5px;color:var(--muted);flex:1}
+  .flow-row .out{font-size:11px;font-weight:600;letter-spacing:0.04em;padding:3px 10px;border-radius:20px;white-space:nowrap}
+  .out.res{background:rgba(31,138,91,0.16);color:#52c98c}
+  .out.esc{background:rgba(196,127,23,0.16);color:#e0a341}
+  @media(max-width:640px){.flow-row{flex-wrap:wrap;gap:8px}.flow-row .name{min-width:0;width:100%}}
+
+  /* ---- KB ---- */
+  .kb-links{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+  .kb-links a{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:30px;padding:11px 18px;
+    color:var(--paper);text-decoration:none;font-size:13px;transition:border-color .2s,background .2s}
+  .kb-links a:hover{border-color:var(--red);background:rgba(227,0,43,0.08)}
+  .kb-links a::before{content:"↗";color:var(--red);font-weight:700}
+
+  /* ---- footer ---- */
+  footer{padding:40px 0 60px;color:var(--muted);font-size:12.5px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+  /* ---- widget launcher note ---- */
+  .demo-callout{margin-top:34px;border:1px dashed rgba(227,0,43,0.5);border-radius:14px;padding:20px 24px;background:rgba(227,0,43,0.05);font-size:14px;color:#d8d6df}
+  .demo-callout b{color:#fff}
+
+  /* reduced motion */
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<a id="top"></a>
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> QuickStart&nbsp;Installation</div>
+    <div class="navlinks">
+      <a href="#shift">The Shift</a>
+      <a href="#intents">Intents</a>
+      <a href="#flow">Flow</a>
+      <a href="#knowledge">Knowledge</a>
+      <a href="#demo">Try it</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Virgin Media · Self-Install Intent Framework</div>
+    <h1>Self-install,<br><span class="thin">guided in real time.</span></h1>
+    <p class="lede">Twelve customer journeys. One conversational agent. A reimagined QuickStart experience built around the moments customers actually get stuck — socket checks, kit setup, and the steps a web page alone can't talk them through.</p>
+    <a class="hero-cta" href="#demo">Try the agent →</a>
+  </div>
+</header>
+
+<div class="stats wrap" style="max-width:1120px;border-radius:0">
+  <div class="stat"><div class="n">1,007</div><div class="l">QuickStart utterances a week — 58.9% of all activation contacts (Lex NLU)</div></div>
+  <div class="stat"><div class="n">~£70</div><div class="l">Saved per deflected contact — £10.60 self-install vs £80 manned conversion</div></div>
+  <div class="stat"><div class="n">~30<span class="unit">%</span></div><div class="l">Of QuickStart journeys currently fail and pull in an engineer</div></div>
+  <div class="stat"><div class="n">53</div><div class="l">Approved images, GIFs &amp; clips for kit ID and step support</div></div>
+  <div class="stat"><div class="n">0</div><div class="l">API integrations — grounded entirely in public help content</div></div>
+</div>
+
+<!-- THE SHIFT -->
+<section id="shift">
+  <div class="wrap">
+    <div class="shift-grid">
+      <div>
+        <div class="sec-label">The Shift</div>
+        <h2>From failed installs <span class="thin">to guided success.</span></h2>
+        <p class="sec-body">The job is simple to state and hard to do well: get a customer from an empty box to working broadband without an engineer visit. The <strong>QuickStart intent framework</strong> breaks that journey into discrete sub-intents, each mapped to grounded help content, a guided in-chat walkthrough, or a clean handoff.</p>
+        <p class="sec-body" style="margin-top:16px">Most resolve entirely within the conversation. Escalation to a human agent is reserved for the moments that genuinely need one — a suspected faulty Pod, an order-tracking query, an install that won't come good.</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <h4><span class="tag">Grounded</span> Answers from the source</h4>
+          <p>Every factual answer is retrieved from a live crawl of virginmedia.com/help — never improvised. The agent and the self-serve website stay in lockstep.</p>
+        </div>
+        <div class="pillar">
+          <h4><span class="tag">Visual</span> Show, don't quiz</h4>
+          <p>Instead of asking a nervous customer to describe their kit, the agent shows a picture — "does yours look like this?" — to identify the Hub, the Pod, or the wall socket in one tap.</p>
+        </div>
+        <div class="pillar">
+          <h4><span class="tag">Honest</span> Self-serve first</h4>
+          <p>No suitable socket? The customer is guided to book an engineer themselves at checkout — keeping them in self-serve rather than burning a human transfer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTENTS -->
+<section id="intents">
+  <div class="wrap">
+    <div class="sec-label">The Intents</div>
+    <h2>Twelve journeys. <span class="thin">Twelve precise paths.</span></h2>
+    <p class="sec-body">Hover any card to reveal how the agent resolves it — the grounded help page, the guided steps, or the handoff that makes each one land.</p>
+
+    <div class="cards">
+      <!-- 1 -->
+      <div class="card">
+        <div class="idx"><b>01</b> / ACQUIRE</div>
+        <h3>How does QuickStart work?</h3>
+        <span class="chip low">Low complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Explains the self-install option and grounds the answer in the installation overview page.</p>
+          <div class="src">virginmedia.com/broadband/installation</div>
+        </div>
+      </div>
+      <!-- 2 -->
+      <div class="card">
+        <div class="idx"><b>02</b> / ACQUIRE</div>
+        <h3>Is my wall socket suitable?</h3>
+        <span class="chip med">Medium complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Conveys the suitability criteria, shows socket photos to help the customer identify theirs, and confirms before they buy.</p>
+          <div class="src">virginmedia.com/help/check-wall-socket</div>
+        </div>
+      </div>
+      <!-- 3 -->
+      <div class="card">
+        <div class="idx"><b>03</b> / ACQUIRE</div>
+        <h3>I don't have the right socket</h3>
+        <span class="chip low">Low complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Guides the customer to request an engineer themselves at checkout (£30) — self-serve, no transfer unless they can't complete it.</p>
+          <div class="src">virginmedia.com/help/check-wall-socket/check-postcode</div>
+        </div>
+      </div>
+      <!-- 4 -->
+      <div class="card">
+        <div class="idx"><b>04</b> / ONBOARDING</div>
+        <h3>Where's my kit?</h3>
+        <span class="chip low">Low complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Signposts the order tracking page and explains CollectPlus vs home delivery. Detailed tracking queries hand off to an agent.</p>
+          <div class="src">virginmedia.com/help/track-my-order</div>
+        </div>
+      </div>
+      <!-- 5 -->
+      <div class="card">
+        <div class="idx"><b>05</b> / ONBOARDING</div>
+        <h3>Set up my WiFi Hub</h3>
+        <span class="chip med">Medium complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Identifies the Hub model by picture, then walks the install one step at a time with a GIF for each — Hub 3, 4 and 5.</p>
+          <div class="src">Grounded guided steps + media</div>
+        </div>
+      </div>
+      <!-- 6 -->
+      <div class="card">
+        <div class="idx"><b>06</b> / ONBOARDING</div>
+        <h3>Uninstall my old Hub</h3>
+        <span class="chip med">Medium complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Guides removal step by step, with explicit care on the safety-critical step: never remove the connector cable from the wall socket.</p>
+          <div class="src">Grounded guided steps + media</div>
+        </div>
+      </div>
+      <!-- 7 -->
+      <div class="card">
+        <div class="idx"><b>07</b> / ONBOARDING</div>
+        <h3>Set up my TV box</h3>
+        <span class="chip med">Medium complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Distinguishes Stream from Virgin TV 360 by picture, then guides HDMI, power, remote and WiFi steps with clips.</p>
+          <div class="src">Grounded guided steps + media</div>
+        </div>
+      </div>
+      <!-- 8 -->
+      <div class="card">
+        <div class="idx"><b>08</b> / ONBOARDING</div>
+        <h3>Set up my WiFi Pods</h3>
+        <span class="chip med">Medium complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Clears up the classic Pod-vs-Booster mix-up with images, then guides placement and pairing. Faulty Pods escalate.</p>
+          <div class="src">Grounded guided steps + media</div>
+        </div>
+      </div>
+      <!-- 9 -->
+      <div class="card">
+        <div class="idx"><b>09</b> / ONBOARDING</div>
+        <h3>Set up my landline</h3>
+        <span class="chip low">Low complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Walks cable swap and connection to the grey TEL 1 port, then a test call to confirm a dial tone.</p>
+          <div class="src">Grounded guided steps + media</div>
+        </div>
+      </div>
+      <!-- 10 -->
+      <div class="card">
+        <div class="idx"><b>10</b> / ONBOARDING</div>
+        <h3>What do I do with my old Hub?</h3>
+        <span class="chip low">Low complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Explains return-if-asked (or risk a charge) versus recycle, and points to the return/recycle guidance.</p>
+          <div class="src">virginmedia.com/help/return-or-recycle-equipment</div>
+        </div>
+      </div>
+      <!-- 11 -->
+      <div class="card">
+        <div class="idx"><b>11</b> / USE</div>
+        <h3>My setup isn't working</h3>
+        <span class="chip med">Medium complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Diagnoses simple issues from grounded content, then sends the customer to service status identification. Won't diagnose beyond it — escalates instead.</p>
+          <div class="src">virginmedia.com/help/check/status/identification/identify</div>
+        </div>
+      </div>
+      <!-- 12 -->
+      <div class="card">
+        <div class="idx"><b>12</b> / ONBOARDING</div>
+        <h3>Change to an engineer install</h3>
+        <span class="chip low">Low complexity</span>
+        <div class="hovedhint">Hover for details →</div>
+        <div class="reveal"><div class="rl">How it resolves</div>
+          <p>Confirms the switch needs an agent booking and hands back to AWS with the right intent attributes. No booking by the agent.</p>
+          <div class="src">Escalation → human agent</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section id="flow">
+  <div class="wrap">
+    <div class="sec-label">The Flow</div>
+    <h2>One entry point. <span class="thin">Two clean outcomes.</span></h2>
+    <p class="sec-body">Every QuickStart contact arrives from the same front door. An upstream Lex bot classifies the intent and hands off to the GECX agent, which establishes the customer's stage and routes to resolution or a clean escalation.</p>
+
+    <div class="flow">
+      <div class="flow-entry"><span class="pin">Entry</span> Customer contact — classified as QuickStart-adjacent, handed off to GECX</div>
+      <div class="flow-split">
+        <div class="flow-row"><span class="name">Acquire — socket OK</span><span class="path">Confirm suitability → proceed to checkout</span><span class="out res">Resolved</span></div>
+        <div class="flow-row"><span class="name">Acquire — no socket</span><span class="path">Self-serve engineer booking at checkout (£30)</span><span class="out res">Resolved</span></div>
+        <div class="flow-row"><span class="name">Kit tracking</span><span class="path">Signpost track-my-order page</span><span class="out res">Resolved</span></div>
+        <div class="flow-row"><span class="name">Hub / TV / Pod / landline</span><span class="path">Guided in-chat steps with media</span><span class="out res">Resolved</span></div>
+        <div class="flow-row"><span class="name">Old hub / returns</span><span class="path">Return or recycle guidance</span><span class="out res">Resolved</span></div>
+        <div class="flow-row"><span class="name">Install won't work</span><span class="path">Service status identification → if unresolved, hand off</span><span class="out esc">Escalate</span></div>
+        <div class="flow-row"><span class="name">Faulty / unconnectable Pod</span><span class="path">Troubleshoot → hand off to agent</span><span class="out esc">Escalate</span></div>
+        <div class="flow-row"><span class="name">Change install type</span><span class="path">Confirm → hand back to AWS for booking</span><span class="out esc">Escalate</span></div>
+        <div class="flow-row"><span class="name">Out of scope</span><span class="path">Billing, account, established faults, availability</span><span class="out esc">Escalate</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KNOWLEDGE -->
+<section id="knowledge">
+  <div class="wrap">
+    <div class="sec-label">Knowledge Base</div>
+    <h2>Powered by <span class="thin">public help content.</span></h2>
+    <p class="sec-body">Every answer the agent gives is grounded in a live crawl of the virginmedia.com help and guide pages — so the automated journey stays in perfect sync with the self-serve web experience, with nothing improvised. A representative sample:</p>
+    <div class="kb-links">
+      <a href="https://www.virginmedia.com/help/check-wall-socket" target="_blank" rel="noopener">Check your wall socket</a>
+      <a href="https://www.virginmedia.com/help/quickstart-setup" target="_blank" rel="noopener">QuickStart setup</a>
+      <a href="https://www.virginmedia.com/help/track-my-order" target="_blank" rel="noopener">Track my order</a>
+      <a href="https://www.virginmedia.com/help/return-or-recycle-equipment" target="_blank" rel="noopener">Return or recycle equipment</a>
+      <a href="https://www.virginmedia.com/help/check/status/identification/identify" target="_blank" rel="noopener">Service status identification</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section id="demo" style="border-bottom:none">
+  <div class="wrap">
+    <div class="sec-label">Try It</div>
+    <h2>The agent, <span class="thin">live.</span></h2>
+    <p class="sec-body">The chat widget below is the real QuickStart agent running in GECX. Try asking how QuickStart works, telling it your kit has arrived and you need to set up a Hub, or asking what a Virgin Media wall socket looks like.</p>
+    <div class="demo-callout">
+      <b>Demo note:</b> the agent connects to the GECX deployment via the embed at the bottom of this page. If the chat panel isn't visible, check that the deployment ID in the page source is current and that the CDN domains are allow-listed for media to render.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Concept microsite · Virgin Media QuickStart — Self-Install Intent Framework</span>
+    <span>POC v1 · grounded · no API integration</span>
+  </div>
+</footer>
+
+<!-- ============================================================= -->
+<!-- GECX CHAT WIDGET EMBED                                         -->
+<!-- Replace the deploymentName below with your own deployment ID. -->
+<!-- Update url-allowlist with the CDN origins your media uses.    -->
+<!-- ============================================================= -->
+<script>
+  window.addEventListener("chat-messenger-loaded", () => {
+    chatSdk.registerContext(
+      chatSdk.prebuilts.ces.createContext({
+        deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849"
+      }),
+    );
+  });
+</script>
+<chat-messenger
+  url-allowlist="https://a.storyblok.com,https://storyblok.cdn.vmo2digital.co.uk,https://prod.ctassets.virginmedia.com"
+>
+  <chat-messenger-container
+    chat-title="QuickStart Agent"
+    chat-title-icon="https://gstatic.com/dialogflow-console/common/assets/ccai-favicons/conversational_agents.png"
+    enable-file-upload
+    enable-audio-input
+  >
+    <chat-reset-session-button slot="titlebar-actions" title-text="Start new chat"></chat-reset-session-button>
+    <chat-toggle-dialog-button slot="titlebar-actions" title-text-expanded="Collapse" title-text-collapsed="Expand"></chat-toggle-dialog-button>
+    <chat-messenger-close-button slot="titlebar-actions" title-text="Close"></chat-messenger-close-button>
+  </chat-messenger-container>
+</chat-messenger>
+
+</body>
+</html>
