@@ -6,7 +6,26 @@
 <title>QuickStart Installation — Intent Framework</title>
 <script defer src="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/chat-messenger.js"></script>
 <link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-default.css">
-<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-layout.css">
+<!-- Float the GECX widget as a fixed chat panel above the page, hidden until launched.
+     CSS positioning is the documented alternative to render-mode; chat-messenger-layout.css
+     is intentionally NOT loaded because it styles <body> and forces the inline full-width bar. -->
+<style>
+  chat-messenger{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    z-index:999;
+    width:400px;
+    max-width:calc(100vw - 48px);
+    height:640px;
+    max-height:calc(100vh - 48px);
+    display:none;
+  }
+  chat-messenger.qs-open{display:block}
+  @media(max-width:480px){
+    chat-messenger.qs-open{right:0;bottom:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh}
+  }
+</style>
 <style>
   :root{
     --ink:#0a0a0f;
@@ -410,11 +429,19 @@
       );
     });
 
+    const qsMessenger = document.querySelector('chat-messenger');
+
+    // Launch the floating chat panel from the "Start the agent" button.
     function openQuickStartChat() {
-      const messenger = document.querySelector('chat-messenger');
-      if (messenger && typeof messenger.open === 'function') {
-        messenger.open();
-      }
+      if (qsMessenger) qsMessenger.classList.add('qs-open');
+    }
+
+    // Hide the panel again when the user closes it from the titlebar X
+    // (chat-messenger-close is the documented close event).
+    if (qsMessenger) {
+      qsMessenger.addEventListener('chat-messenger-close', () => {
+        qsMessenger.classList.remove('qs-open');
+      });
     }
 </script>
 <chat-messenger url-allowlist="*">
