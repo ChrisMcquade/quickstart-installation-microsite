@@ -400,10 +400,8 @@
 </footer>
 
 
-<!-- Load the GECX chat widget library — required before anything else -->
+<!-- GECX chat widget: listener must be registered before bootstrap.js fires chat-messenger-loaded -->
 <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.css">
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js"></script>
-
 <script>
   window.addEventListener("chat-messenger-loaded", () => {
     chatSdk.registerContext(
@@ -417,10 +415,9 @@
     );
   });
 </script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js"></script>
 
-<chat-messenger
-  url-allowlist="*"
->
+<chat-messenger url-allowlist="*">
   <chat-messenger-container
     chat-title="QuickStart Agent"
     chat-title-icon="https://gstatic.com/dialogflow-console/common/assets/ccai-favicons/conversational_agents.png"
