@@ -429,20 +429,24 @@
       );
     });
 
-    const qsMessenger = document.querySelector('chat-messenger');
-
     // Launch the floating chat panel from the "Start the agent" button.
+    // Query lazily: this <script> runs before the <chat-messenger> element
+    // exists later in the body, so we must look it up at click time.
     function openQuickStartChat() {
-      if (qsMessenger) qsMessenger.classList.add('qs-open');
+      const messenger = document.querySelector('chat-messenger');
+      if (messenger) messenger.classList.add('qs-open');
     }
 
     // Hide the panel again when the user closes it from the titlebar X
     // (chat-messenger-close is the documented close event).
-    if (qsMessenger) {
-      qsMessenger.addEventListener('chat-messenger-close', () => {
-        qsMessenger.classList.remove('qs-open');
-      });
-    }
+    window.addEventListener('DOMContentLoaded', () => {
+      const messenger = document.querySelector('chat-messenger');
+      if (messenger) {
+        messenger.addEventListener('chat-messenger-close', () => {
+          messenger.classList.remove('qs-open');
+        });
+      }
+    });
 </script>
 <chat-messenger url-allowlist="*">
   <chat-messenger-container
