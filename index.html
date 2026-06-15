@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuickStart Installation — Intent Framework</title>
+<script defer src="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/chat-messenger.js"></script>
+<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-default.css">
+<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-layout.css">
 <style>
   :root{
     --ink:#0a0a0f;
@@ -400,23 +403,19 @@
 </footer>
 
 
-<!-- GECX chat widget: listener must be registered before bootstrap.js fires chat-messenger-loaded -->
-<link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.css">
 <script>
-  window.addEventListener("chat-messenger-loaded", () => {
-    chatSdk.registerContext(
-      chatSdk.prebuilts.ces.createContext({
-        deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849",
-        tokenBroker: {
-          enableTokenBroker: true,
-          enableRecaptcha: false
-        }
-      }),
-    );
-  });
+    window.addEventListener("chat-messenger-loaded", () => {
+      chatSdk.registerContext(
+        chatSdk.prebuilts.ces.createContext({
+          deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849",
+          tokenBroker: {
+            enableTokenBroker: true,
+            enableRecaptcha: false
+          }
+        }),
+      );
+    });
 </script>
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js"></script>
-
 <chat-messenger url-allowlist="*">
   <chat-messenger-container
     chat-title="QuickStart Agent"
@@ -424,9 +423,19 @@
     enable-file-upload
     enable-audio-input
   >
-    <chat-reset-session-button slot="titlebar-actions" title-text="Start new chat"></chat-reset-session-button>
-    <chat-toggle-dialog-button slot="titlebar-actions" title-text-expanded="Collapse" title-text-collapsed="Expand"></chat-toggle-dialog-button>
-    <chat-messenger-close-button slot="titlebar-actions" title-text="Close"></chat-messenger-close-button>
+    <chat-reset-session-button
+      slot="titlebar-actions"
+      title-text="Start new chat"
+    ></chat-reset-session-button>
+    <chat-toggle-dialog-button
+      slot="titlebar-actions"
+      title-text-expanded="Collapse"
+      title-text-collapsed="Expand"
+    ></chat-toggle-dialog-button>
+    <chat-messenger-close-button
+      slot="titlebar-actions"
+      title-text="Close"
+    ></chat-messenger-close-button>
   </chat-messenger-container>
 </chat-messenger>
 
