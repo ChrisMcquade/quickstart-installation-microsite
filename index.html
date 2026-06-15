@@ -131,10 +131,6 @@
   footer{padding:40px 0 60px;color:var(--muted);font-size:12.5px}
   footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
-  /* ---- widget launcher note ---- */
-  .demo-callout{margin-top:34px;border:1px dashed rgba(227,0,43,0.5);border-radius:14px;padding:20px 24px;background:rgba(227,0,43,0.05);font-size:14px;color:#d8d6df}
-  .demo-callout b{color:#fff}
-
   /* reduced motion */
   @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -388,10 +384,8 @@
   <div class="wrap">
     <div class="sec-label">Try It</div>
     <h2>The agent, <span class="thin">live.</span></h2>
-    <p class="sec-body">The chat widget below is the real QuickStart agent running in GECX. Try asking how QuickStart works, telling it your kit has arrived and you need to set up a Hub, or asking what a Virgin Media wall socket looks like.</p>
-    <div class="demo-callout">
-      <b>Demo note:</b> the agent connects to the GECX deployment via the embed at the bottom of this page. If the chat panel isn't visible, check that the deployment ID in the page source is current and that the CDN domains are allow-listed for media to render.
-    </div>
+    <p class="sec-body">The real QuickStart agent, running in GECX. Try asking how QuickStart works, telling it your kit has arrived and you need to set up a Hub, or asking what a Virgin Media wall socket looks like.</p>
+    <button class="hero-cta" style="border:none;cursor:pointer;margin-top:34px" onclick="openQuickStartChat()">Start the agent →</button>
   </div>
 </section>
 
@@ -415,6 +409,13 @@
         }),
       );
     });
+
+    function openQuickStartChat() {
+      const messenger = document.querySelector('chat-messenger');
+      if (messenger && typeof messenger.open === 'function') {
+        messenger.open();
+      }
+    }
 </script>
 <chat-messenger url-allowlist="*">
   <chat-messenger-container
