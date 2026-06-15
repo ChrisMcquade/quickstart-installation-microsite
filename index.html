@@ -400,17 +400,26 @@
 </footer>
 
 
+<!-- Load the GECX chat widget library — required before anything else -->
+<link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.css">
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger-cx/bootstrap.js"></script>
+
 <script>
   window.addEventListener("chat-messenger-loaded", () => {
     chatSdk.registerContext(
       chatSdk.prebuilts.ces.createContext({
-        deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849"
+        deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849",
+        tokenBroker: {
+          enableTokenBroker: true,
+          enableRecaptcha: false
+        }
       }),
     );
   });
 </script>
+
 <chat-messenger
-  url-allowlist="https://a.storyblok.com,https://storyblok.cdn.vmo2digital.co.uk,https://prod.ctassets.virginmedia.com,https://chrismcquade.github.io"
+  url-allowlist="*"
 >
   <chat-messenger-container
     chat-title="QuickStart Agent"
@@ -424,5 +433,6 @@
   </chat-messenger-container>
 </chat-messenger>
 
+  
 </body>
 </html>
