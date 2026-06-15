@@ -416,27 +416,46 @@
 
 
 <script>
+    // No Google session is opened on page load. We only call
+    // registerContext (which hits the token broker and starts a billable
+    // session) when the visitor actually clicks "Start the agent".
+    let chatReady = false;    // the chat-messenger element has initialised
+    let chatStarted = false;  // registerContext has been called (once)
+    let pendingOpen = false;  // user clicked before the element was ready
+
     window.addEventListener("chat-messenger-loaded", () => {
-      chatSdk.registerContext(
-        chatSdk.prebuilts.ces.createContext({
-          deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849",
-          tokenBroker: {
-            enableTokenBroker: true,
-            enableRecaptcha: false
-          },
-          // Agent opens with its configured greeting instead of waiting
-          // for the user to type first.
-          enableWelcomeEvent: true
-        }),
-      );
+      chatReady = true;
+      if (pendingOpen) startQuickStartChat();
     });
 
-    // Launch the floating chat panel from the "Start the agent" button.
-    // Query lazily: this <script> runs before the <chat-messenger> element
-    // exists later in the body, so we must look it up at click time.
-    function openQuickStartChat() {
+    function startQuickStartChat() {
+      if (!chatStarted) {
+        chatSdk.registerContext(
+          chatSdk.prebuilts.ces.createContext({
+            deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849",
+            tokenBroker: {
+              enableTokenBroker: true,
+              enableRecaptcha: false
+            },
+            // Agent opens with its configured greeting instead of waiting
+            // for the user to type first.
+            enableWelcomeEvent: true
+          }),
+        );
+        chatStarted = true;
+      }
       const messenger = document.querySelector('chat-messenger');
       if (messenger) messenger.classList.add('qs-open');
+    }
+
+    // Launch from the "Start the agent" button. If the element hasn't
+    // finished loading yet, defer until chat-messenger-loaded fires.
+    function openQuickStartChat() {
+      if (chatReady) {
+        startQuickStartChat();
+      } else {
+        pendingOpen = true;
+      }
     }
 
     // Hide the panel again when the user closes it from the titlebar X
