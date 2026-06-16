@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuickStart Installation — Intent Framework</title>
-<script defer src="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/chat-messenger.js"></script>
-<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-default.css">
+<script defer src="https://www.gstatic.com/ces-console/fast/chat-messenger/prod/v1/chat-messenger.js"></script>
+<link rel="stylesheet" href="https://www.gstatic.com/ces-console/fast/chat-messenger/prod/v1/themes/chat-messenger-default.css">
 <!-- Float the GECX widget as a fixed chat panel above the page, hidden until launched.
      CSS positioning is the documented alternative to render-mode; chat-messenger-layout.css
      is intentionally NOT loaded because it styles <body> and forces the inline full-width bar. -->
@@ -428,42 +428,42 @@
 
       const cm = document.querySelector('chat-messenger');
       if (cm) {
-        // --- displayImage client-side renderer ---
-        // registerTemplate accepts any (context) => htmlString function.
-        // We use inline styles because the message is rendered inside the
-        // widget's shadow DOM where page-level CSS cannot reach.
-        cm.registerTemplate('qs_display_image', (ctx) => {
-          const url  = ctx.rawUrl || '';
-          const alt  = (ctx.accessibilityText || 'Image').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-          if (!url) {
-            return '<p style="color:#888;font-size:13px;margin:6px 0">Image unavailable</p>';
-          }
-          return `
-            <div style="padding:6px 0">
+        if (typeof cm.registerTemplate !== 'function' ||
+            typeof cm.registerClientSideFunction !== 'function') {
+          console.warn('[QuickStart] SDK does not expose registerTemplate/registerClientSideFunction — displayImage will not render.');
+        } else {
+          // Register a plain-JS template for the displayImage widget.
+          // Inline styles are required: insertRichMessage renders inside
+          // the widget shadow DOM where page-level CSS cannot reach.
+          cm.registerTemplate('qs_display_image', (ctx) => {
+            const url = ctx.rawUrl || '';
+            const alt = (ctx.accessibilityText || 'Image').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+            if (!url) return '<p style="color:#888;font-size:13px;margin:6px 0">Image unavailable</p>';
+            return `<div style="padding:6px 0">
               <img src="${url}" alt="${alt}"
                    style="max-width:100%;border-radius:12px;display:block"
                    onerror="this.style.display='none';this.nextElementSibling.removeAttribute('hidden')">
               <p hidden style="color:#888;font-size:13px;margin:4px 0">Image unavailable</p>
             </div>`;
-        });
+          });
 
-        // registerClientSideFunction intercepts the displayImage tool call
-        // before any server round-trip, renders the card, and returns success.
-        // Both toolName (full resource path) and toolDisplayName must match
-        // the registration in the GECX console exactly.
-        cm.registerClientSideFunction(
-          {
-            toolName: 'projects/prj-vo-digital-s-jim-d/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/tools/ae2bfab2-9fce-4bc2-82e9-829a8c218c8b',
-            toolDisplayName: 'displayImage',
-          },
-          (args) => {
-            cm.insertRichMessage('qs_display_image', {
-              rawUrl: args.rawUrl,
-              accessibilityText: args.accessibilityText,
-            });
-            return Promise.resolve({ status: 'success' });
-          }
-        );
+          // Intercept the displayImage tool call client-side. Both toolName
+          // (full resource path) and toolDisplayName must match the GECX
+          // console registration exactly.
+          cm.registerClientSideFunction(
+            {
+              toolName: 'projects/prj-vo-digital-s-jim-d/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/tools/ae2bfab2-9fce-4bc2-82e9-829a8c218c8b',
+              toolDisplayName: 'displayImage',
+            },
+            (args) => {
+              cm.insertRichMessage('qs_display_image', {
+                rawUrl: args.rawUrl,
+                accessibilityText: args.accessibilityText,
+              });
+              return Promise.resolve({ status: 'success' });
+            }
+          );
+        }
       }
 
       if (pendingOpen) startQuickStartChat();
