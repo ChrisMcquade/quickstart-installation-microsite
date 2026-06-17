@@ -416,6 +416,36 @@
 
 
 <script>
+    // Visit the page with ?qsdebug=1 to show a small on-screen log of JS
+    // errors, failed network requests and chat-messenger events. This lets
+    // us capture real error details from a phone with no devtools access.
+    // Remove once the mobile "unexpected error" issue is diagnosed.
+    const qsDebugOn = new URLSearchParams(location.search).has('qsdebug');
+    let qsDebugEl = null;
+    function qsLog(msg) {
+      if (!qsDebugOn) return;
+      if (!qsDebugEl) {
+        qsDebugEl = document.createElement('div');
+        qsDebugEl.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#000;color:#0f0;font:11px monospace;padding:8px;border-radius:6px;max-height:35vh;overflow:auto;white-space:pre-wrap';
+        document.body.appendChild(qsDebugEl);
+      }
+      qsDebugEl.textContent += msg + '\n';
+    }
+    if (qsDebugOn) {
+      window.addEventListener('error', e => qsLog('JS error: ' + e.message));
+      window.addEventListener('unhandledrejection', e => qsLog('Promise rejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason)));
+      const qsOrigFetch = window.fetch;
+      window.fetch = function (...args) {
+        return qsOrigFetch.apply(this, args).then(res => {
+          if (!res.ok) qsLog('Fetch ' + res.status + ': ' + (args[0] && args[0].url ? args[0].url : args[0]));
+          return res;
+        }).catch(err => {
+          qsLog('Fetch failed: ' + (args[0] && args[0].url ? args[0].url : args[0]) + ' — ' + err.message);
+          throw err;
+        });
+      };
+    }
+
     // No Google session is opened on page load. We only call
     // registerContext (which hits the token broker and starts a billable
     // session) when the visitor actually clicks "Start the agent".
@@ -467,6 +497,10 @@
         messenger.addEventListener('chat-messenger-close', () => {
           messenger.classList.remove('qs-open');
         });
+        if (qsDebugOn) {
+          ['chat-messenger-loaded', 'chat-messenger-close', 'chat-messenger-error', 'chat-messenger-message-error']
+            .forEach(evt => messenger.addEventListener(evt, e => qsLog(evt + ': ' + JSON.stringify(e.detail || {}))));
+        }
       }
     });
 </script>
