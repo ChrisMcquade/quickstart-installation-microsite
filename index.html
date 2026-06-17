@@ -20,7 +20,7 @@
     height:min(640px, calc(100vh - 48px));
     display:none;
   }
-  chat-messenger.qs-open{display:block}
+  chat-messenger.qs-open{display:block;height:100dvh;max-height:100dvh;bottom:0}
   @media(max-width:520px){
     chat-messenger.qs-open{right:0;bottom:0;width:100vw;max-width:100vw;height:100dvh}
   }
@@ -474,6 +474,7 @@
   <chat-messenger-container
     chat-title="QuickStart Agent"
     chat-title-icon="https://gstatic.com/dialogflow-console/common/assets/ccai-favicons/conversational_agents.png"
+    enable-audio-input
   >
     <chat-reset-session-button
       slot="titlebar-actions"
