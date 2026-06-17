@@ -437,7 +437,12 @@
       const qsOrigFetch = window.fetch;
       window.fetch = function (...args) {
         return qsOrigFetch.apply(this, args).then(res => {
-          if (!res.ok) qsLog('Fetch ' + res.status + ': ' + (args[0] && args[0].url ? args[0].url : args[0]));
+          if (!res.ok) {
+            const url = args[0] && args[0].url ? args[0].url : args[0];
+            res.clone().text().then(body => {
+              qsLog('Fetch ' + res.status + ': ' + url + '\nBody: ' + body.slice(0, 500));
+            }).catch(() => qsLog('Fetch ' + res.status + ': ' + url + ' (no body)'));
+          }
           return res;
         }).catch(err => {
           qsLog('Fetch failed: ' + (args[0] && args[0].url ? args[0].url : args[0]) + ' — ' + err.message);
