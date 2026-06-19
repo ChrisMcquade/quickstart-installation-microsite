@@ -1,0 +1,7 @@
+{
+  "name": "23adacf1-0fc6-438d-9206-dcb94df30cda",
+  "displayName": "Skipping uninstall step",
+  "llmCriteria": {
+    "prompt": "Skips uninstall; no format-preference question."
+  }
+}

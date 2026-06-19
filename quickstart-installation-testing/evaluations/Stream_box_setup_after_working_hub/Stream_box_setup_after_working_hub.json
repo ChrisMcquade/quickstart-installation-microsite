@@ -1,0 +1,23 @@
+{
+  "name": "ff29f222-ba1a-4394-9b62-bd218d4c7f71",
+  "displayName": "Stream box setup after working hub",
+  "scenario": {
+    "task": "As someone whose hub is already working, set up my Stream TV box.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Hub",
+      "value": "working"
+    }, {
+      "name": "TV",
+      "value": "Stream box"
+    }],
+    "maxTurns": 12,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Stream steps"]
+  }
+}

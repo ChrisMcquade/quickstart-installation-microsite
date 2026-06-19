@@ -1,0 +1,23 @@
+{
+  "name": "ae2bfab2-9fce-4bc2-82e9-829a8c218c8b",
+  "displayName": "displayImage",
+  "widgetTool": {
+    "name": "displayImage",
+    "description": "Renders an approved image or GIF inline in the chat to help the customer visually identify their kit (Hub model, WiFi Pod vs Booster, wall socket, TV box) or follow a setup step. Call this whenever showing a picture would help. Provide the exact image URL from the approved media library and a short alt text describing what it shows. Use a maximum of one image per message.",
+    "widgetType": "CUSTOM",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "accessibilityText": {
+          "type": "STRING",
+          "description": "A short plain-language description of what the image shows, e.g. \u0027Virgin Media Hub 5\u0027 or \u0027Connecting the coaxial cable to your Hub 3\u0027."
+        },
+        "rawUrl": {
+          "type": "STRING",
+          "description": "The exact approved image or GIF URL to display inline. Must be copied verbatim from the approved media library — never invented or modified."
+        }
+      },
+      "required": ["rawUrl", "accessibilityText"]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "1a4cf7ba-08dc-49df-ab6f-51cf91f50a80",
+  "displayName": "Logo gorunding",
+  "llmCriteria": {
+    "prompt": "CRITICAL grounding test. \u0027logo\u0027 should appear if answered from the page; \u0027written on\u0027 should NOT (no fixed text claim).\n"
+  }
+}

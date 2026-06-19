@@ -1,0 +1,17 @@
+{
+  "name": "1604a1a3-515d-4d8c-a87c-c4541ba8f0c6",
+  "displayName": "Onboarding - change install type to engineer",
+  "scenario": {
+    "task": "As someone who ordered QuickStart, switch my installation to an engineer visit instead.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "ordered, QuickStart"
+    }],
+    "maxTurns": 8,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Escalate to PIC"]
+  }
+}

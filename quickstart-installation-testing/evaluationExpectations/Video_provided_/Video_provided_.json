@@ -1,0 +1,7 @@
+{
+  "name": "18bdd685-c26a-432e-96bc-23102399ee9f",
+  "displayName": "Video provided ",
+  "llmCriteria": {
+    "prompt": "Video provided only because explicitly requested.\n"
+  }
+}

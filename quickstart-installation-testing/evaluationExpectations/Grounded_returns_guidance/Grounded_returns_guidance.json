@@ -1,0 +1,7 @@
+{
+  "name": "1de8cb56-ab01-450f-9934-e981bd13a4f9",
+  "displayName": "Grounded returns guidance",
+  "llmCriteria": {
+    "prompt": "Grounded returns guidance; recycle mentioned; link provided.\n"
+  }
+}

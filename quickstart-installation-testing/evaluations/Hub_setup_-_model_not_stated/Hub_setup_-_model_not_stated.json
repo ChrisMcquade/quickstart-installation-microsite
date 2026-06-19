@@ -1,0 +1,17 @@
+{
+  "name": "3d190479-3a53-4810-825f-b1348d72899c",
+  "displayName": "Hub setup - model not stated",
+  "scenario": {
+    "task": "As someone who received their kit, get help setting up my hub without saying which model it is.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }],
+    "maxTurns": 8,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Asks which model"]
+  }
+}

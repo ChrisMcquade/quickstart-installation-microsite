@@ -1,0 +1,20 @@
+{
+  "name": "6969b2bd-f1d3-459d-a56b-57d796dc6be9",
+  "displayName": "Customer explicitly requests a video",
+  "scenario": {
+    "task": "As someone setting up a Hub 4, watch a video instead of reading steps.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Hub",
+      "value": "Hub 4"
+    }],
+    "maxTurns": 8,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Video provided "]
+  }
+}

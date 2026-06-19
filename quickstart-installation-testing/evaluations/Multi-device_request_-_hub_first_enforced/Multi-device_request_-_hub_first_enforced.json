@@ -1,0 +1,20 @@
+{
+  "name": "1b9d051a-6e69-475c-ad13-629e25f4b45d",
+  "displayName": "Multi-device request - hub first enforced",
+  "scenario": {
+    "task": "As someone with a full kit, set up my TV box, hub, and pods all at once.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Devices",
+      "value": "hub, TV box, pods"
+    }],
+    "maxTurns": 14,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Hub-first, one-at-a-time."]
+  }
+}

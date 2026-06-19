@@ -1,0 +1,7 @@
+{
+  "name": "b565a603-39b0-4fcb-85c5-eb27e715298c",
+  "displayName": "Happy path BB Installation",
+  "llmCriteria": {
+    "prompt": "Grounded steps; connector-cable safety phrase appears; no proactive format question."
+  }
+}

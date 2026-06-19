@@ -1,0 +1,23 @@
+{
+  "name": "a1c1f3ce-7e3c-4235-b010-3490a5f2ae0b",
+  "displayName": "Virgin TV 360 box setup",
+  "scenario": {
+    "task": "As someone with a working hub, set up my Virgin TV 360 box.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Hub",
+      "value": "working"
+    }, {
+      "name": "TV",
+      "value": "Virgin TV 360"
+    }],
+    "maxTurns": 12,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Grounded 360 steps."]
+  }
+}

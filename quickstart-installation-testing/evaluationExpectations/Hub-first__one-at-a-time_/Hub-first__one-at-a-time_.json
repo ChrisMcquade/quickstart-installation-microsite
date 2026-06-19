@@ -1,0 +1,7 @@
+{
+  "name": "16e174db-7c6d-4b2c-9ea8-fb7bbd730f0f",
+  "displayName": "Hub-first, one-at-a-time.",
+  "llmCriteria": {
+    "prompt": "Hub-first, one-at-a-time. NB: \u0027one at a time\u0027 must be a phrase the agent uses; soften to a tool/688 check if it varies.\n"
+  }
+}
