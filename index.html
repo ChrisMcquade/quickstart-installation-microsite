@@ -74,6 +74,9 @@
   .hero-cta{margin-top:34px;display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;text-decoration:none;
     padding:14px 26px;border-radius:40px;font-weight:600;font-size:14px;letter-spacing:0.01em;transition:transform .18s,box-shadow .18s}
   .hero-cta:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(227,0,43,0.35)}
+  .alt-cta{display:inline-flex;align-items:center;gap:9px;background:transparent;color:var(--paper);border:1px solid var(--line);
+    padding:12px 22px;border-radius:40px;font-weight:600;font-size:13.5px;letter-spacing:0.01em;cursor:pointer;transition:border-color .2s,background .2s}
+  .alt-cta:hover{border-color:var(--red);background:rgba(227,0,43,0.08)}
 
   /* ---- stat band ---- */
   .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid var(--line);background:var(--ink-soft)}
@@ -404,6 +407,12 @@
     <h2>The agent, <span class="thin">live.</span></h2>
     <p class="sec-body">The real QuickStart agent, running in GECX. Try asking how QuickStart works, telling it your kit has arrived and you need to set up a Hub, or asking what a Virgin Media wall socket looks like.</p>
     <button class="hero-cta" style="border:none;cursor:pointer;margin-top:34px" onclick="openQuickStartChat()">Start the agent →</button>
+    <!-- Demo shortcuts: drop the visitor straight into a chosen lifecycle stage
+         by seeding the agent's first user turn, instead of letting it ask. -->
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:18px">
+      <button class="alt-cta" onclick="openQuickStartChat('new')">Start as a new customer →</button>
+      <button class="alt-cta" onclick="openQuickStartChat('onboarding')">Start as an onboarding customer →</button>
+    </div>
   </div>
 </section>
 
@@ -457,14 +466,25 @@
     let chatReady = false;    // the chat-messenger element has initialised
     let chatStarted = false;  // registerContext has been called (once)
     let pendingOpen = false;  // user clicked before the element was ready
+    let pendingOpener;        // opening message to seed once the element is ready
+
+    // Opening utterances that drop the visitor into a specific point of the
+    // agent's journey. The agent's "Determine Customer Stage" subtask
+    // classifies Acquire vs Onboarding from the first user message, so seeding
+    // that message starts the conversation in the chosen stage rather than the
+    // agent having to ask. Lets us demo starting anywhere in the structure.
+    const QS_OPENERS = {
+      new: "Hi, I haven't ordered Virgin Media yet — I'm looking into QuickStart self-install and want to check it's right for me.",
+      onboarding: "Hi, I've already ordered and my kit has arrived. I need help getting set up."
+    };
 
     window.addEventListener("chat-messenger-loaded", () => {
       chatReady = true;
 
-      if (pendingOpen) startQuickStartChat();
+      if (pendingOpen) startQuickStartChat(pendingOpener);
     });
 
-    function startQuickStartChat() {
+    function startQuickStartChat(opener) {
       if (!chatStarted) {
         chatSdk.registerContext(
           chatSdk.prebuilts.ces.createContext({
@@ -473,23 +493,50 @@
               enableTokenBroker: true,
               enableRecaptcha: false
             },
-            // Agent opens with its configured greeting instead of waiting
-            // for the user to type first.
-            enableWelcomeEvent: true
+            // Plain "Start the agent" lets the agent open with its configured
+            // greeting. The stage buttons seed their own opening message, so we
+            // suppress the standalone greeting for those to avoid a greeting +
+            // injected-message double open.
+            enableWelcomeEvent: !opener
           }),
         );
         chatStarted = true;
       }
       const messenger = document.querySelector('chat-messenger');
-      if (messenger) messenger.classList.add('qs-open');
+      if (messenger) {
+        messenger.classList.add('qs-open');
+        if (opener) seedOpeningMessage(messenger, opener);
+      }
     }
 
-    // Launch from the "Start the agent" button. If the element hasn't
-    // finished loading yet, defer until chat-messenger-loaded fires.
-    function openQuickStartChat() {
+    // Send the seeded opening message as the customer's first turn so the agent
+    // classifies the lifecycle stage from it. NOTE: this calls the
+    // chat-messenger SDK's programmatic-send API — feature-detected because the
+    // exact method name (sendQuery vs sendMessage) needs confirming against the
+    // CES console / SDK reference. Guarded so the chat still opens if neither
+    // is present.
+    function seedOpeningMessage(messenger, text) {
+      const send = () => {
+        try {
+          if (typeof messenger.sendQuery === 'function') { messenger.sendQuery(text); return true; }
+          if (typeof messenger.sendMessage === 'function') { messenger.sendMessage(text); return true; }
+        } catch (e) { qsLog('seed send failed: ' + e.message); }
+        return false;
+      };
+      // The element may need a tick after opening before it accepts a query.
+      if (!send()) setTimeout(send, 400);
+    }
+
+    // Launch from a button. `stage` is undefined for the plain "Start the
+    // agent" button, or 'new' / 'onboarding' for the stage-seeded buttons. If
+    // the element hasn't finished loading yet, defer until
+    // chat-messenger-loaded fires.
+    function openQuickStartChat(stage) {
+      const opener = stage ? QS_OPENERS[stage] : undefined;
       if (chatReady) {
-        startQuickStartChat();
+        startQuickStartChat(opener);
       } else {
+        pendingOpener = opener;
         pendingOpen = true;
       }
     }
