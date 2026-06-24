@@ -1,7 +1,0 @@
-{
-  "name": "05f48050-99f9-4bbe-b838-65be31ab1d2a",
-  "displayName": "Socket page delivered",
-  "llmCriteria": {
-    "prompt": "Link relevance: a socket question must link the socket help page, NOT the generic installation page.\n"
-  }
-}

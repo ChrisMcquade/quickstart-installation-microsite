@@ -1,7 +1,0 @@
-{
-  "name": "e3d7fbd3-7b92-4662-85c7-2d2b18a53aa8",
-  "displayName": "Escalation due to no API access",
-  "llmCriteria": {
-    "prompt": "No backend access; escalates, does not state a real-time location.\n"
-  }
-}

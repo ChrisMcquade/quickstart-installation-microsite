@@ -1,7 +1,0 @@
-{
-  "name": "b8422d50-e6b7-4275-87a7-53fa7ddb9664",
-  "displayName": "Switches to Hub 4 after correction.",
-  "llmCriteria": {
-    "prompt": "Switches to Hub 4 after correction.\n"
-  }
-}

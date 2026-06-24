@@ -1,7 +1,0 @@
-{
-  "name": "e3fd8682-d5d4-4675-8e68-67db442dacce",
-  "displayName": "Faulty-pod escalation",
-  "llmCriteria": {
-    "prompt": "Faulty-pod escalation; assert the intent_l3 argument.\n"
-  }
-}

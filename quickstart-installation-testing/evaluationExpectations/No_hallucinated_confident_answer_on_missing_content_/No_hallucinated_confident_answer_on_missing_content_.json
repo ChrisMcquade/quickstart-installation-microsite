@@ -1,7 +1,0 @@
-{
-  "name": "23ae8c8c-509b-4683-9075-bd35ec4445ed",
-  "displayName": "No hallucinated confident answer on missing content.",
-  "llmCriteria": {
-    "prompt": "No hallucinated confident answer on missing content.\n"
-  }
-}

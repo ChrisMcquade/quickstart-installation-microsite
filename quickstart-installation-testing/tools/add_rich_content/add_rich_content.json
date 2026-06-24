@@ -1,9 +1,0 @@
-{
-  "name": "b341cb10-a049-450a-b177-e0e13b6e9636",
-  "pythonFunction": {
-    "name": "add_rich_content",
-    "pythonCode": "tools/add_rich_content/python_function/python_code.py"
-  },
-  "executionType": "SYNCHRONOUS",
-  "displayName": "add_rich_content"
-}

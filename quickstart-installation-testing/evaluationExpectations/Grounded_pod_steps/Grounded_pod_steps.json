@@ -1,7 +1,0 @@
-{
-  "name": "ea4db8f0-259f-4c10-b5e1-1275bb7685cb",
-  "displayName": "Grounded pod steps",
-  "llmCriteria": {
-    "prompt": "Grounded pod steps; asks about light; online-first.\n"
-  }
-}

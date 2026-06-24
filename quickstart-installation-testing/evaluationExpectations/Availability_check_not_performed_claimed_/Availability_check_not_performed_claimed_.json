@@ -1,7 +1,0 @@
-{
-  "name": "6c40093c-1ebc-40da-a0b2-8d907bbcf250",
-  "displayName": "Availability check not performed/claimed.",
-  "llmCriteria": {
-    "prompt": "Availability check not performed/claimed.\n"
-  }
-}

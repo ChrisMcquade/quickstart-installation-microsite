@@ -1,7 +1,0 @@
-{
-  "name": "c64e52cc-ff4f-4ce6-a447-7f4e072c546d",
-  "displayName": "Escalation exception",
-  "llmCriteria": {
-    "prompt": "Exception path: only escalates because the customer explicitly cannot self-serve.\n"
-  }
-}

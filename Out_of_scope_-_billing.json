@@ -1,9 +1,0 @@
-{
-  "name": "c7180498-572d-4871-9f3e-8c3c67cd6e7d",
-  "pythonFunction": {
-    "name": "get_knowledge_article",
-    "pythonCode": "tools/get_knowledge_article/python_function/python_code.py",
-    "description": "Retrieves specific installation steps or information from a simulated knowledge base.\n\nArgs:\n    category (str): The main category of the knowledge article (e.g., \"Hub Setup\", \"WiFi Pods\").\n    item (str): The specific item within the category (e.g., \"Hub 5 Install\", \"Black Pod Steps\").\n    sub_item (str | None, optional): A more granular detail or sub-section (e.g., \"Uninstall Old Hub\", \"Video Guide\"). Defaults to None.\n\nReturns:\n    dict[str, Any]: A dictionary containing the retrieved content or an error message."
-  },
-  "displayName": "get_knowledge_article"
-}

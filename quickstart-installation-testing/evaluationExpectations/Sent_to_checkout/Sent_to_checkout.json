@@ -1,7 +1,0 @@
-{
-  "name": "379a3cc6-562a-4c52-9e93-5c0cc3c85b01",
-  "displayName": "Sent to checkout",
-  "llmCriteria": {
-    "prompt": "Acquire happy path; confirms proceed-to-buy. Note: substring \u0027checkout\u0027 must actually appear; adjust to a word the agent really uses."
-  }
-}

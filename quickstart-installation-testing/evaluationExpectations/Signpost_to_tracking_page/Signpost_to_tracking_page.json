@@ -1,7 +1,0 @@
-{
-  "name": "8a146815-2345-499e-8c50-20d062cf442f",
-  "displayName": "Signpost to tracking page",
-  "llmCriteria": {
-    "prompt": "Signpost only; negative substrings catch invented delivery dates / live status.\n"
-  }
-}

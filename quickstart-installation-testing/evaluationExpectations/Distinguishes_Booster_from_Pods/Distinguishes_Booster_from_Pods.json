@@ -1,7 +1,0 @@
-{
-  "name": "7241bbd7-f795-4333-b3f6-9164a8a317ee",
-  "displayName": "Distinguishes Booster from Pods",
-  "llmCriteria": {
-    "prompt": "Distinguishes Booster from Pods (the word \u0027Booster\u0027 appears in the clarification).\n"
-  }
-}

@@ -1,7 +1,0 @@
-{
-  "name": "36ffbc9d-fc97-4da5-86e5-a329f5d967b2",
-  "displayName": "Steers a not-yet-ordered",
-  "llmCriteria": {
-    "prompt": "Steers a not-yet-ordered user back to the socket check rather than full install.\n"
-  }
-}

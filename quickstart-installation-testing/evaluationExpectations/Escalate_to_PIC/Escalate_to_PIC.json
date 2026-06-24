@@ -1,7 +1,0 @@
-{
-  "name": "7ebed621-cbe0-4b38-b571-8b7f25180cf0",
-  "displayName": "Escalate to PIC",
-  "llmCriteria": {
-    "prompt": "Agent does not book; escalates with correct static intent_l2.\n"
-  }
-}

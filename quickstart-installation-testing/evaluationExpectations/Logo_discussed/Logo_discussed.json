@@ -1,7 +1,0 @@
-{
-  "name": "4b446efd-25b4-4620-ac00-57f9fe55623d",
-  "displayName": "Logo discussed",
-  "llmCriteria": {
-    "prompt": "Grounding regression for the originally-failing phrasing; answer references the logo, sourced from datastore.\n"
-  }
-}

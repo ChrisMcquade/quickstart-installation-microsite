@@ -1,7 +1,0 @@
-{
-  "name": "ada32e42-5677-4d86-8fc9-c8adf42bddc5",
-  "displayName": "Billing out of scope; escalate, do not action.",
-  "llmCriteria": {
-    "prompt": "Billing out of scope; escalate, do not action.\n"
-  }
-}
