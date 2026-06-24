@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickStart — SDK comparison &amp; network diagnostic</title>
+
+<!-- =========================================================================
+     INSTRUMENTATION — must run BEFORE any SDK script loads.
+     Patches fetch + XMLHttpRequest to count and categorise CES traffic so we
+     can see, live, how many calls each SDK/mode generates.
+     ========================================================================= -->
+<script>
+(function () {
+  function categorise(url) {
+    url = url || '';
+    if (url.indexOf('BidiRunSession') > -1 || url.indexOf('webchannel') > -1) return 'audioStream';
+    if (url.indexOf('runSession') > -1) return 'textRun';
+    if (url.indexOf('generateChatToken') > -1 || url.indexOf(':generate') > -1) return 'token';
+    if (url.indexOf('googleapis.com') > -1 && (url.indexOf('ces') > -1)) return 'otherCES';
+    return null; // ignore static asset loads
+  }
+  var counts = { audioStream: 0, textRun: 0, token: 0, otherCES: 0 };
+  var stamps = [];
+  window.__cesNet = { counts: counts, stamps: stamps, startedAt: null };
+  function record(url) {
+    var c = categorise(url);
+    if (!c) return;
+    counts[c]++;
+    stamps.push(Date.now());
+    if (stamps.length > 5000) stamps.shift();
+  }
+  var of = window.fetch;
+  if (of) {
+    window.fetch = function (input) {
+      try { record(typeof input === 'string' ? input : (input && input.url)); } catch (e) {}
+      return of.apply(this, arguments);
+    };
+  }
+  var oo = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (m, url) { try { this.__u = url; } catch (e) {} return oo.apply(this, arguments); };
+  var os = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.send = function () { try { record(this.__u); } catch (e) {} return os.apply(this, arguments); };
+})();
+</script>
+
+<style>
+  body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; margin: 0; background: #0e0e12; color: #e9e9ef; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 24px 20px 120px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p.sub { color: #9a9aa8; margin: 0 0 20px; font-size: 13px; }
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .btns a { text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            border: 1px solid #2a2a36; color: #e9e9ef; background: #16161e; }
+  .btns a.active { background: #e3002b; border-color: #e3002b; color: #fff; }
+  .panel { border: 1px solid #2a2a36; border-radius: 10px; padding: 16px; margin-bottom: 16px; background: #14141b; }
+  .panel h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #8a8a99; margin: 0 0 12px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .metric { background: #0e0e12; border: 1px solid #232330; border-radius: 8px; padding: 12px; }
+  .metric .n { font-size: 26px; font-weight: 700; }
+  .metric .n.hot { color: #ff5c7a; }
+  .metric .l { font-size: 11px; color: #8a8a99; margin-top: 4px; }
+  #mode { font-weight: 700; color: #ffd24a; }
+  pre#log { background: #08080b; border: 1px solid #232330; border-radius: 8px; padding: 12px; height: 260px;
+            overflow: auto; font-size: 11px; line-height: 1.5; white-space: pre-wrap; margin: 0; color: #c9c9d6; }
+  code { background: #08080b; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  .hint { font-size: 12px; color: #9a9aa8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>QuickStart — SDK comparison &amp; network diagnostic</h1>
+  <p class="sub">Pick a mode. Only the selected SDK is loaded per page view (no cross-SDK conflict). Watch the <b>last 10s</b> request rate — that is the number to compare.</p>
+
+  <div class="btns" id="btns">
+    <a href="?sdk=old"      data-sdk="old">OLD — chat-messenger v1.16 (text)</a>
+    <a href="?sdk=new"      data-sdk="new">NEW — ces-messenger (mic ON + read-aloud)</a>
+    <a href="?sdk=new-text" data-sdk="new-text">NEW — ces-messenger (mic OFF, read-aloud ON)</a>
+  </div>
+
+  <div class="panel">
+    <h2>Live CES network</h2>
+    <div style="margin-bottom:12px">Mode: <span id="mode">none selected</span> &nbsp;·&nbsp; session uptime: <span id="m_up">—</span></div>
+    <div class="grid">
+      <div class="metric"><div class="n hot" id="m_rate">0 / 10s</div><div class="l">requests in last 10s (the rate to compare)</div></div>
+      <div class="metric"><div class="n" id="m_total">0</div><div class="l">total CES requests</div></div>
+      <div class="metric"><div class="n" id="m_audio">0</div><div class="l">audio / Bidi stream (mic)</div></div>
+      <div class="metric"><div class="n" id="m_text">0</div><div class="l">text runSession</div></div>
+      <div class="metric"><div class="n" id="m_token">0</div><div class="l">auth token</div></div>
+      <div class="metric"><div class="n" id="m_other">0</div><div class="l">other CES</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Event &amp; latency log</h2>
+    <pre id="log"></pre>
+    <p class="hint" style="margin:10px 0 0">Watch for <code>ces-tool-call-received</code> — its detail shows the EXACT <code>tool</code> and <code>displayName</code> the browser receives, which is the ground truth for your registration. Lines marked ⏱ measure time from your message to first reply.</p>
+  </div>
+
+  <p class="hint" id="instructions"></p>
+</div>
+
+<script>
+// ---- your project's identifiers (non-secret resource paths) ----
+var DEPLOYMENT = 'projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849';
+// NOTE: the Insights trace showed the tool path with the project ID (prj-vo-digital-s-jim-d),
+// while this uses the project number. If display_image never fires, read the exact string from
+// the ces-tool-call-received log line below and match toolName to it.
+var TOOL_NAME = 'projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/tools/1f1d80c9-aba1-463a-b8e5-6e54aaf8ad25';
+
+function log(msg) {
+  var pre = document.getElementById('log');
+  pre.textContent += '[' + new Date().toLocaleTimeString() + '] ' + msg + '\n';
+  pre.scrollTop = pre.scrollHeight;
+}
+
+var sdk = new URLSearchParams(location.search).get('sdk');
+// highlight active button
+document.querySelectorAll('#btns a').forEach(function (a) {
+  if (a.getAttribute('data-sdk') === sdk) a.classList.add('active');
+});
+
+// live metrics render loop
+setInterval(function () {
+  var net = window.__cesNet, c = net.counts, now = Date.now();
+  var last10 = net.stamps.filter(function (t) { return now - t < 10000; }).length;
+  document.getElementById('m_rate').textContent  = last10 + ' / 10s';
+  document.getElementById('m_total').textContent = c.audioStream + c.textRun + c.token + c.otherCES;
+  document.getElementById('m_audio').textContent = c.audioStream;
+  document.getElementById('m_text').textContent  = c.textRun;
+  document.getElementById('m_token').textContent = c.token;
+  document.getElementById('m_other').textContent = c.otherCES;
+  document.getElementById('m_up').textContent = net.startedAt ? Math.round((now - net.startedAt) / 1000) + 's' : '—';
+}, 500);
+
+// ---------- OLD: chat-messenger v1.16 (text-only baseline) ----------
+function loadOld() {
+  document.getElementById('mode').textContent = 'OLD — chat-messenger v1.16 (text)';
+  var l = document.createElement('link');
+  l.rel = 'stylesheet';
+  l.href = 'https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-default.css';
+  document.head.appendChild(l);
+
+  var holder = document.createElement('div');
+  holder.innerHTML =
+    '<chat-messenger url-allowlist="*">' +
+      '<chat-messenger-container chat-title="OLD chat-messenger">' +
+        '<chat-messenger-close-button slot="titlebar-actions" title-text="Close"></chat-messenger-close-button>' +
+      '</chat-messenger-container>' +
+    '</chat-messenger>';
+  document.body.appendChild(holder.firstChild);
+
+  ['chat-messenger-loaded', 'chat-messenger-close', 'chat-messenger-error', 'chat-messenger-message-error']
+    .forEach(function (ev) { window.addEventListener(ev, function (e) { log('event ' + ev + (e.detail ? ' ' + JSON.stringify(e.detail) : '')); }); });
+
+  window.addEventListener('chat-messenger-loaded', function () {
+    log('chat-messenger loaded; registering context');
+    window.__cesNet.startedAt = Date.now();
+    chatSdk.registerContext(chatSdk.prebuilts.ces.createContext({
+      deploymentName: DEPLOYMENT,
+      tokenBroker: { enableTokenBroker: true, enableRecaptcha: false }
+    }));
+  });
+
+  var s = document.createElement('script');
+  s.defer = true;
+  s.src = 'https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/chat-messenger.js';
+  document.head.appendChild(s);
+  log('Loading OLD SDK… click the chat bubble (bottom-right) to open.');
+}
+
+// ---------- NEW: ces-messenger (audioInput = mic on/off; read-aloud always on) ----------
+function loadNew(micOn) {
+  document.getElementById('mode').textContent = micOn
+    ? 'NEW — ces-messenger (mic ON + read-aloud)'
+    : 'NEW — ces-messenger (mic OFF, read-aloud ON)';
+
+  var el = document.createElement('ces-messenger');
+  el.setAttribute('deployment-id', DEPLOYMENT);
+  el.setAttribute('token-broker-url', 'MANAGED');
+  el.setAttribute('chat-title', micOn ? 'NEW (mic on)' : 'NEW (mic off)');
+  el.setAttribute('auto-open-chat', 'true');
+  el.setAttribute('enable-debugger', 'true');                 // populates window.cesMessengerLogs
+  el.setAttribute('audio-input-mode', micOn ? 'DEFAULT_ON' : 'DEFAULT_OFF');
+  el.setAttribute('audio-output-mode', 'ALWAYS_ON');          // read-aloud kept in BOTH modes
+  document.body.appendChild(el);
+
+  var tIn = null;
+  var evts = ['ces-messenger-loaded', 'ces-messenger-connected', 'ces-messenger-disconnected',
+              'ces-authentication-error', 'ces-user-input-entered', 'ces-text-received',
+              'ces-payload-received', 'ces-tool-call-received', 'ces-tool-response-sent',
+              'ces-message-received'];
+  evts.forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      if (ev === 'ces-user-input-entered') tIn = Date.now();
+      if (ev === 'ces-text-received' && tIn) { log('⏱ first text after ' + (Date.now() - tIn) + 'ms'); tIn = null; }
+      if (ev === 'ces-tool-call-received') { log('TOOL CALL ▶ ' + JSON.stringify(e.detail)); return; }
+      var d = e.detail ? ' ' + JSON.stringify(e.detail).slice(0, 240) : '';
+      log('event ' + ev + d);
+    });
+  });
+  window.addEventListener('ces-messenger-connected', function () { window.__cesNet.startedAt = Date.now(); });
+
+  window.addEventListener('ces-messenger-loaded', function () {
+    var cesm = document.querySelector('ces-messenger');
+    cesm.registerClientSideFunction(
+      { toolName: TOOL_NAME, toolDisplayName: 'display_image' },
+      function (args) {
+        log('display_image() called ▶ ' + JSON.stringify(args));
+        var url = args.url || '';
+        var cap = (args.caption || '').replace(/"/g, '&quot;');
+        var ok = false;
+        try { ok = new URL(url).hostname.endsWith('storyblok.com'); } catch (e) {}
+        if (ok) {
+          cesm.insertMessage('BOT', { payload: { html:
+            '<img style="width:100%;border-radius:8px" src="' + url + '" alt="' + cap + '"/>' +
+            (cap ? '<p>' + cap + '</p>' : '') } });
+        } else {
+          log('display_image: URL host not allow-listed, not rendering: ' + url);
+        }
+        return Promise.resolve({ status: 'OK' });
+      }
+    );
+  });
+
+  var s = document.createElement('script');
+  s.src = 'https://www.gstatic.com/ces-console/fast/ces-messenger/ces-messenger.js';
+  document.head.appendChild(s);
+  log('Loading NEW SDK (' + (micOn ? 'mic ON — browser will ask for microphone permission' : 'mic OFF') + ')…');
+}
+
+// ---- dispatch ----
+if (sdk === 'old') loadOld();
+else if (sdk === 'new') loadNew(true);
+else if (sdk === 'new-text') loadNew(false);
+else {
+  document.getElementById('instructions').innerHTML =
+    'No SDK loaded. Choose a mode above. Suggested run: open <b>mic ON</b>, type "hello", note the last-10s rate climb into the 70s–80s; then <b>mic OFF</b>, repeat, and watch it stay low while read-aloud still plays; <b>OLD</b> is your fast text baseline. Ask "Can you show me what the wall socket looks like?" in the NEW modes to test the image tool and read the TOOL CALL line.';
+}
+</script>
+</body>
+</html>
