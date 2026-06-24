@@ -1,0 +1,20 @@
+{
+  "name": "b91a5868-815c-4fef-8dce-be13a5d957f6",
+  "displayName": "Successful close with refer-a-friend",
+  "scenario": {
+    "task": "As someone who has finished setting everything up, end the conversation.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Status",
+      "value": "everything working"
+    }],
+    "maxTurns": 6,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Warm close with referral link."]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "ba647740-5627-42a4-8e62-bae40fbc2703",
+  "displayName": "Mid-journey correction of hub model",
+  "scenario": {
+    "task": "As someone setting up, correct myself partway that my hub is a Hub 4, not a Hub 5, and continue.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": " kit received"
+    }, {
+      "name": "Hub",
+      "value": " actually Hub 4 (initially said Hub 5)"
+    }],
+    "maxTurns": 12,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Switches to Hub 4 after correction."]
+  }
+}
