@@ -4,27 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuickStart Installation — Intent Framework</title>
-<script defer src="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/chat-messenger.js"></script>
-<link rel="stylesheet" href="https://www.gstatic.com/chat-messenger/sdk/prod/v1.16/themes/chat-messenger-default.css">
-<!-- Float the GECX widget as a fixed chat panel above the page, hidden until launched.
-     CSS positioning is the documented alternative to render-mode; chat-messenger-layout.css
-     is intentionally NOT loaded because it styles <body> and forces the inline full-width bar. -->
-<style>
-  chat-messenger{
-    position:fixed;
-    right:24px;
-    bottom:24px;
-    z-index:999;
-    width:460px;
-    max-width:calc(100vw - 48px);
-    height:min(640px, calc(100vh - 48px));
-    display:none;
-  }
-  chat-messenger.qs-open{display:block;height:100dvh;max-height:100dvh;bottom:0}
-  @media(max-width:520px){
-    chat-messenger.qs-open{right:0;bottom:0;width:100vw;max-width:100vw;height:100dvh}
-  }
-</style>
+<script src="https://www.gstatic.com/ces-console/fast/ces-messenger/ces-messenger.js"></script>
 <style>
   :root{
     --ink:#0a0a0f;
@@ -403,7 +383,7 @@
     <div class="sec-label">Try It</div>
     <h2>The agent, <span class="thin">live.</span></h2>
     <p class="sec-body">The real QuickStart agent, running in GECX. Try asking how QuickStart works, telling it your kit has arrived and you need to set up a Hub, or asking what a Virgin Media wall socket looks like.</p>
-    <button class="hero-cta" style="border:none;cursor:pointer;margin-top:34px" onclick="openQuickStartChat()">Start the agent →</button>
+    <button class="hero-cta" style="border:none;cursor:pointer;margin-top:34px" onclick="document.querySelector('ces-messenger').open()">Start the agent →</button>
   </div>
 </section>
 
@@ -415,9 +395,45 @@
 </footer>
 
 
+<!-- The agent is the only entry point: with disable-bubble="true" there is no
+     floating bubble, so the "Start the agent" CTA calls ces-messenger.open().
+     NOTE: with token-broker-url="MANAGED" the widget may open a session on page
+     load rather than on open() — TODO verify the lazy-start / billing cost. -->
+<ces-messenger
+  deployment-id="TODO_PASTE_DEPLOYMENT_ID_FROM_CONSOLE"
+  token-broker-url="MANAGED"
+  chat-title="QuickStart Agent"
+  disable-bubble="true">
+</ces-messenger>
+
+<script>
+  window.addEventListener('ces-messenger-loaded', () => {
+    const cesm = document.querySelector('ces-messenger');
+    cesm.registerClientSideFunction(
+      {
+        toolName: 'TODO_PASTE_TOOL_RESOURCE_NAME_FROM_CONSOLE', // projects/.../tools/...
+        toolDisplayName: 'display_image'
+      },
+      (args) => {
+        const url = args.url || '';
+        const caption = (args.caption || '').replace(/"/g, '&quot;');
+        let ok = false;
+        try { ok = new URL(url).hostname.endsWith('storyblok.com'); } catch (e) {}
+        if (ok) {
+          const html =
+            `<img style="width:100%;border-radius:8px" src="${url}" alt="${caption}" />` +
+            (caption ? `<p>${caption}</p>` : '');
+          cesm.insertMessage('BOT', { payload: { html } });
+        }
+        return Promise.resolve({ status: 'OK' });
+      }
+    );
+  });
+</script>
+
 <script>
     // Visit the page with ?qsdebug=1 to show a small on-screen log of JS
-    // errors, failed network requests and chat-messenger events. This lets
+    // errors, failed network requests and ces-messenger events. This lets
     // us capture real error details from a phone with no devtools access.
     // Remove once the mobile "unexpected error" issue is diagnosed.
     const qsDebugOn = new URLSearchParams(location.search).has('qsdebug');
@@ -449,88 +465,12 @@
           throw err;
         });
       };
+
+      ['ces-messenger-loaded', 'ces-messenger-connected', 'ces-message-received', 'ces-tool-call-received', 'ces-messenger-disconnected']
+        .forEach(evt => window.addEventListener(evt, e => qsLog(evt + ': ' + JSON.stringify((e && e.detail) || {}))));
     }
-
-    // No Google session is opened on page load. We only call
-    // registerContext (which hits the token broker and starts a billable
-    // session) when the visitor actually clicks "Start the agent".
-    let chatReady = false;    // the chat-messenger element has initialised
-    let chatStarted = false;  // registerContext has been called (once)
-    let pendingOpen = false;  // user clicked before the element was ready
-
-    window.addEventListener("chat-messenger-loaded", () => {
-      chatReady = true;
-
-      if (pendingOpen) startQuickStartChat();
-    });
-
-    function startQuickStartChat() {
-      if (!chatStarted) {
-        chatSdk.registerContext(
-          chatSdk.prebuilts.ces.createContext({
-            deploymentName: "projects/788788042356/locations/eu/apps/05e8d72e-ef61-4b5b-818a-fefe51db33bf/deployments/b821ce38-bea4-4bcc-b2b9-3262db69b849",
-            tokenBroker: {
-              enableTokenBroker: true,
-              enableRecaptcha: false
-            },
-            // Agent opens with its configured greeting instead of waiting
-            // for the user to type first.
-            enableWelcomeEvent: true
-          }),
-        );
-        chatStarted = true;
-      }
-      const messenger = document.querySelector('chat-messenger');
-      if (messenger) messenger.classList.add('qs-open');
-    }
-
-    // Launch from the "Start the agent" button. If the element hasn't
-    // finished loading yet, defer until chat-messenger-loaded fires.
-    function openQuickStartChat() {
-      if (chatReady) {
-        startQuickStartChat();
-      } else {
-        pendingOpen = true;
-      }
-    }
-
-    // Hide the panel again when the user closes it from the titlebar X
-    // (chat-messenger-close is the documented close event).
-    window.addEventListener('DOMContentLoaded', () => {
-      const messenger = document.querySelector('chat-messenger');
-      if (messenger) {
-        messenger.addEventListener('chat-messenger-close', () => {
-          messenger.classList.remove('qs-open');
-        });
-        if (qsDebugOn) {
-          ['chat-messenger-loaded', 'chat-messenger-close', 'chat-messenger-error', 'chat-messenger-message-error']
-            .forEach(evt => messenger.addEventListener(evt, e => qsLog(evt + ': ' + JSON.stringify(e.detail || {}))));
-        }
-      }
-    });
 </script>
-<chat-messenger url-allowlist="*">
-  <chat-messenger-container
-    chat-title="QuickStart Agent"
-    chat-title-icon="https://gstatic.com/dialogflow-console/common/assets/ccai-favicons/conversational_agents.png"
-    enable-audio-input
-  >
-    <chat-reset-session-button
-      slot="titlebar-actions"
-      title-text="Start new chat"
-    ></chat-reset-session-button>
-    <chat-toggle-dialog-button
-      slot="titlebar-actions"
-      title-text-expanded="Collapse"
-      title-text-collapsed="Expand"
-    ></chat-toggle-dialog-button>
-    <chat-messenger-close-button
-      slot="titlebar-actions"
-      title-text="Close"
-    ></chat-messenger-close-button>
-  </chat-messenger-container>
-</chat-messenger>
 
-  
+
 </body>
 </html>
