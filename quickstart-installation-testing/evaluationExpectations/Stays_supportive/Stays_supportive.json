@@ -1,0 +1,7 @@
+{
+  "name": "063ced96-30a2-4b80-9579-bfe7686a5a6c",
+  "displayName": "Stays supportive",
+  "llmCriteria": {
+    "prompt": "Stays supportive (doesn\u0027t tell user to \u0027calm down\u0027); moves to diagnose.\n"
+  }
+}

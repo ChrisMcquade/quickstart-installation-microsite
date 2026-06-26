@@ -1,0 +1,7 @@
+{
+  "name": "6c0bc269-c243-490e-ab76-e33668a86e4b",
+  "displayName": "Established fault not treated as a fresh install.",
+  "llmCriteria": {
+    "prompt": "Established fault not treated as a fresh install.\n"
+  }
+}

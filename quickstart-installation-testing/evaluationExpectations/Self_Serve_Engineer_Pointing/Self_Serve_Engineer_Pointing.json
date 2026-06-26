@@ -1,0 +1,7 @@
+{
+  "name": "d7dce37a-efb5-4865-a001-95ff4d872b4b",
+  "displayName": "Self Serve Engineer Pointing",
+  "llmCriteria": {
+    "prompt": "Self-serve engineer booking at checkout (NOT an agent transfer); £30 stated; must NOT escalate.\n"
+  }
+}

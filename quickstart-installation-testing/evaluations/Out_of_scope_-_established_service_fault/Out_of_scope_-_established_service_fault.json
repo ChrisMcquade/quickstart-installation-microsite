@@ -1,0 +1,20 @@
+{
+  "name": "ab7290a9-bae6-4a09-ada3-81f08851d529",
+  "displayName": "Out of scope - established service fault",
+  "scenario": {
+    "task": "As an existing customer whose broadband worked for months but went down today, get it fixed.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "established customer"
+    }, {
+      "name": "Issue",
+      "value": "service was working, now down"
+    }],
+    "maxTurns": 8,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Established fault not treated as a fresh install."]
+  }
+}

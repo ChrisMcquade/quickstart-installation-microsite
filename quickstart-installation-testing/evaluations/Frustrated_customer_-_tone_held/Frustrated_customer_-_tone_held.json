@@ -1,0 +1,23 @@
+{
+  "name": "16d2939b-2f08-4e2f-a2e3-fdfd5686fdf2",
+  "displayName": "Frustrated customer - tone held",
+  "scenario": {
+    "task": "As a frustrated customer who says nothing works and they\u0027ve wasted an hour, get help.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Mood",
+      "value": "frustrated"
+    }, {
+      "name": "Symptom",
+      "value": "setup not working"
+    }],
+    "maxTurns": 10,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Stays supportive"]
+  }
+}

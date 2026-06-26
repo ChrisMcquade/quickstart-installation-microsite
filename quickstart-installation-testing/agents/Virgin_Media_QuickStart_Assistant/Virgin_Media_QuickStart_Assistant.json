@@ -1,0 +1,6 @@
+{
+  "name": "b0d9c1a1-ca5b-417e-8d4f-68aab3b6af02",
+  "displayName": "Virgin Media QuickStart Assistant",
+  "instruction": "agents/Virgin_Media_QuickStart_Assistant/instruction.txt",
+  "tools": ["add_rich_content", "end_session", "escalate_to_aws", "vm_website_datastore"]
+}

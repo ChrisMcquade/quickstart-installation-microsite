@@ -1,0 +1,20 @@
+{
+  "name": "70c77c5a-f8c6-43c4-b5a4-ef5dd563e76d",
+  "displayName": "Acquire - no suitable socket, self-serve engineer",
+  "scenario": {
+    "task": "As someone who has not ordered and has no suitable wall socket, find out what my options are.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "not yet ordered"
+    }, {
+      "name": "Socket",
+      "value": "confirmed NOT suitable (loose / no silver connectors)"
+    }],
+    "maxTurns": 10,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Self Serve Engineer Pointing"]
+  }
+}

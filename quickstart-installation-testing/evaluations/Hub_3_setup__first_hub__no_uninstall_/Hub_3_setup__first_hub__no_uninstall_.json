@@ -1,0 +1,23 @@
+{
+  "name": "572a7592-67f1-459b-ae86-98f8efd04acf",
+  "displayName": "Hub 3 setup, first hub (no uninstall)",
+  "scenario": {
+    "task": "As someone who has received their kit, set up my Hub 3 which is my first hub.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "kit received"
+    }, {
+      "name": "Hub",
+      "value": "Hub 3"
+    }, {
+      "name": "Old hub",
+      "value": "none"
+    }],
+    "maxTurns": 12,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Skipping uninstall step"]
+  }
+}

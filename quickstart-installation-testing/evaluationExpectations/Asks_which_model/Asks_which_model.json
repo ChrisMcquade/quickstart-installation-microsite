@@ -1,0 +1,7 @@
+{
+  "name": "a0ae037c-7ba7-4e78-856f-255440d99771",
+  "displayName": "Asks which model",
+  "llmCriteria": {
+    "prompt": "Asks which model (reply lists the model options, so \u0027Hub 5\u0027/\u0027Hub 3\u0027 appear).\n"
+  }
+}

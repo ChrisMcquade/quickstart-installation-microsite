@@ -1,0 +1,38 @@
+{
+  "name": "1f1d80c9-aba1-463a-b8e5-6e54aaf8ad25",
+  "clientFunction": {
+    "name": "display_image",
+    "description": "Renders an approved image inline to help the customer identify kit or follow a step. Call whenever a picture helps. Pass the exact approved image URL (verbatim) and short alt text. One image per message.",
+    "parameters": {
+      "type": "OBJECT",
+      "properties": {
+        "caption": {
+          "type": "STRING",
+          "description": "Short plain-language alt text describing what the image shows, e.g. \u0027Virgin Media wall socket\u0027 or \u0027Connecting the coaxial cable to your Hub 5\u0027."
+        },
+        "url": {
+          "type": "STRING",
+          "description": "The exact approved image URL to display inline, copied verbatim from the approved media library. Never invented or modified."
+        }
+      },
+      "required": ["url"]
+    },
+    "response": {
+      "type": "OBJECT",
+      "properties": {
+        "status": {
+          "type": "STRING",
+          "description": "Whether the image was rendered on the client. \u0027OK\u0027 on success."
+        }
+      },
+      "required": ["status"]
+    }
+  },
+  "displayName": "display_image",
+  "toolFakeConfig": {
+    "codeBlock": {
+      "pythonCode": "tools/display_image/tool_fake_config/code_block/python_code.py"
+    },
+    "enableFakeMode": true
+  }
+}

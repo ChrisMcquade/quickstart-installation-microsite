@@ -1,0 +1,35 @@
+{
+  "name": "364d2e11-378e-448a-853c-034f4148fbaf",
+  "dataStoreTool": {
+    "name": "vm_website_datastore",
+    "description": "This is the knowledge base of the entire Virgin Media website created by a website crawl of the URLs www.virginmedia.com/help/*",
+    "engineSource": {
+      "dataStoreSources": [{
+        "dataStore": {
+          "name": "$env_var",
+          "engineType": "SEARCH_ENGINE"
+        }
+      }]
+    },
+    "modalityConfigs": [{
+      "modalityType": "TEXT",
+      "rewriterConfig": {
+        "modelSettings": {
+        }
+      },
+      "summarizationConfig": {
+        "modelSettings": {
+        },
+        "prompt": "Given the conversation between a Human and an AI assistant and a list of sources, write a final answer for the AI assistant.\nFollow these guidelines:\n  + Answer the Human\u0027s query and make sure you mention all relevant details from the sources, using exactly the same words as the sources if possible.\n  + The answer must be based only on the sources and not introduce any additional information.\n  + All numbers, like price, date, time or phone numbers must appear exactly as they are in the sources.\n  + Give as comprehensive answer as possible given the sources. Include all important details, and any caveats and conditions that apply.\n  + The answer MUST be in English.\n  + Don\u0027t try to make up an answer: If the answer cannot be found in the sources, you admit that you don\u0027t know and you answer NOT_ENOUGH_INFORMATION.\n\nYou will be given a few examples before you begin.\n\nExample 1:\nSources:\n[1] \u003cproduct or service\u003e Info Page\nYes, \u003ccompany\u003e offers \u003cproduct or service\u003e in various options or variations.\n\nHuman: Do you sell \u003cproduct or service\u003e?\nAI: Yes, \u003ccompany\u003e sells \u003cproduct or service\u003e. Is there anything else I can\nhelp you with?\n\nExample 2:\nSources:\n[1] Andrea - Wikipedia\nAndrea is a given name which is common worldwide for both males and females.\n\nHuman: How is the weather?\nAI: NOT_ENOUGH_INFORMATION\n\n\nBegin! Let\u0027s work this out step by step to be sure we have the right answer.\n\nSources:\n$sources\n\n$conversation\nHuman: $query\nAI:\n"
+      },
+      "groundingConfig": {
+        "groundingLevel": 3.0
+      }
+    }, {
+      "modalityType": "AUDIO"
+    }],
+    "filterParameterBehavior": "NEVER_INCLUDE"
+  },
+  "executionType": "SYNCHRONOUS",
+  "displayName": "vm_website_datastore"
+}

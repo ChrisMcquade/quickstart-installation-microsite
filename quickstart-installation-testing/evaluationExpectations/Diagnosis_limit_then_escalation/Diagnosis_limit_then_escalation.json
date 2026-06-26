@@ -1,0 +1,7 @@
+{
+  "name": "79d7c7c2-36df-43af-b670-4d2b8ad87598",
+  "displayName": "Diagnosis limit then escalation",
+  "llmCriteria": {
+    "prompt": "Diagnosis limit then escalation; both via tool-call assertions (reliable).\n"
+  }
+}

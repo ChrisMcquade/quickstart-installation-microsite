@@ -1,0 +1,7 @@
+{
+  "name": "e1a1ee10-2918-471d-b39b-9aa394faf415",
+  "displayName": "Acquire vs Onboarding",
+  "llmCriteria": {
+    "prompt": "Asks whether they\u0027ve ordered yet (Acquire vs Onboarding) - \u0027ordered\u0027 appears.\n"
+  }
+}

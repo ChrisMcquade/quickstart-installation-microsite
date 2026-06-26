@@ -1,0 +1,17 @@
+{
+  "name": "6f13f027-b227-45dd-a971-df9538be0400",
+  "displayName": "Acquire - direct question \u0027whats written on the socket\u0027",
+  "scenario": {
+    "task": "As someone considering ordering, get a direct answer to whether anything is written on the Virgin Media wall socket.\n",
+    "userFacts": [{
+      "name": "Lifecycle",
+      "value": "not yet ordered"
+    }],
+    "maxTurns": 6,
+    "variableOverrides": {
+    },
+    "taskCompletionBehavior": "TASK_SATISFIED",
+    "userGoalBehavior": "USER_GOAL_SATISFIED",
+    "evaluationExpectations": ["Logo discussed"]
+  }
+}
